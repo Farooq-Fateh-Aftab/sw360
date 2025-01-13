@@ -1,0 +1,403 @@
+SW360 VM Workspace setup steps :
+
+               a. Download and Install VMware Workstation Player 17.
+
+               b. Download Ubuntu ubuntu-22.04.2-desktop-amd64.iso image and setup the system.
+
+
+
+
+     2. Create folder and clone sw360 github repo
+
+            a. sudo apt install git
+
+            b. git clone https://github.com/eclipse-sw360/sw360.git
+
+
+
+
+     3. Install thrift
+
+cd sw360/
+ sudo apt update
+sudo apt install curl
+sudo apt-get install cmake
+sudo apt-get update
+sudo apt-get install build-essential
+sudo apt-get install automake bison flex g++ git libboost-all-dev libevent-dev libssl-dev libtool make pkg-config
+./scripts/install-thrift.sh
+
+                 To check thrift version : thrift -version
+
+     4. Install Postgres:
+
+sudo DEBIAN_FRONTEND=noninteractive apt-get install postgresql-14 -y --no-install-recommends
+psql -V
+sudo su postgres
+psql -U postgres -c "CREATE DATABASE lportal;"
+psql -U postgres -c "CREATE USER liferay WITH ENCRYPTED PASSWORD 'liferay';"
+psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE lportal to liferay;"
+exit
+
+
+
+
+    5. Download Liferay Anywhere in your Ubuntu Machine and run the below external jars and place the portal-ext.properties file in the liferay folder
+
+wget https://github.com/liferay/liferay-portal/releases/download/7.4.3.18-ga18/liferay-ce-portal-tomcat-7.4.3.18-ga18-20220329092001364.tar.gz -O liferay-ce-portal-tomcat-7.4.3.18-ga18.tar.gz
+tar -xzf liferay-ce-portal-tomcat-7.4.3.18-ga18.tar.gz
+cd liferay-ce-portal-7.4.3.18-ga18/deploy/
+download jars in deploy folder
+
+                wget https://repo1.maven.org/maven2/commons-codec/commons-codec/1.15/commons-codec-1.15.jar  -O commons-codec-1.15.jar
+
+                wget https://search.maven.org/remotecontent?filepath=org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar -O commons-collections4-4.4.jar
+
+                wget https://repo1.maven.org/maven2/org/apache/commons/commons-csv/1.10.0/commons-csv-1.10.0.jar -O commons-csv-1.10.0.jar 
+
+                wget https://repo1.maven.org/maven2/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar -O commons-io-2.11.0.jar
+
+                wget https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar -O commons-lang3-3.12.0.jar
+
+                wget https://search.maven.org/remotecontent?filepath=commons-logging/commons-logging/1.2/commons-logging-1.2.jar -O commons-logging-1.2.jar
+
+                wget https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar -O gson-2.10.1.jar
+
+                wget https://repo1.maven.org/maven2/com/google/guava/guava/32.0.0-jre/guava-32.0.0-jre.jar  -O guava-32.0.0-jre.jar
+
+                wget https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-annotations/2.14.2/jackson-annotations-2.14.2.jar -O jackson-annotations-2.14.2.jar
+
+                wget https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-core/2.14.2/jackson-core-2.14.2.jar  -O jackson-core-2.14.2.jar
+
+                wget https://repo1.maven.org/maven2/com/fasterxml/jackson/core/jackson-databind/2.14.2/jackson-databind-2.14.2.jar  -O jackson-databind-2.14.2.jar
+
+                wget https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.22/commons-compress-1.22.jar -O commons-compress-1.22.jar
+
+                wget https://repo1.maven.org/maven2/org/apache/thrift/libthrift/0.16.0/libthrift-0.16.0.jar  -O libthrift-0.16.0.jar 
+
+                wget https://repo1.maven.org/maven2/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar -O failureaccess-1.0.1.jar
+
+
+
+
+  6. Install jdk 11 and setup java and Maven
+
+sudo add-apt-repository ppa:openjdk-r/ppa
+sudo apt-get update
+sudo apt install openjdk-11-jdk
+
+         check java version : java –version
+
+         Setup java home : export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+         Verify java home : echo $JAVA_HOME
+
+  7. Install Maven
+
+cd /opt/
+sudo wget https://dlcdn.apache.org/maven/maven-3/3.9.6/binaries/apache-maven-3.9.6-bin.tar.gz
+sudo tar -xf apache-maven-3.9.6-bin.tar.gz
+sudo mv apache-maven-3.9.6/ apache-maven/
+sudo update-alternatives --install /usr/bin/mvn maven /opt/apache-maven/bin/mvn 1001
+
+         Configuring Apache Maven Environment : Create a new file
+
+                 f. cd /etc/profile.d/
+
+                 g.sudo gedit maven.sh
+
+         
+
+         Paste the below environment   variables in the file and save
+
+         # Apache Maven Environment Variables
+
+         # MAVEN_HOME for Maven 1 - M2_HOME for Maven 2
+
+         export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+
+         export M2_HOME=/opt/apache-maven
+
+         export MAVEN_HOME=/opt/apache-maven
+
+         export PATH=${M2_HOME}/bin:${PATH}
+
+
+
+
+        h. sudo chmod +x maven.sh
+
+         i. source maven.sh
+
+   check mvn version : mvn -version
+
+
+
+
+8. Install Couch db
+
+user1@user1-virtual-machine:/etc/profile.d$ cd
+sudo apt install -y curl apt-transport-https gnupg
+curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | sudo tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1
+echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ jammy main" | sudo tee /etc/apt/sources.list.d/couchdb.list >/dev/null
+sudo apt update
+sudo apt install -y couchdb
+
+       provide username password :
+
+       for ex :
+
+       username : admin
+
+       password : 12345
+
+       verify couchdb installed:
+
+       curl http://127.0.0.1:5984
+
+       URL for CouchDB Fauxton in localhost.
+
+       http://localhost:5984/_utils/  
+
+
+
+
+9. Create directory in /etc :
+
+cd etc
+sudo mkdir sw360
+sudo chmod 777 sw360 -R
+copy files present in zip file below etc_sw60_properties_folder.zip folder to /etc/sw360 and replace with correct couch db username and password in couchdb.properties and couchdb-test.properties and in application.yml file of authorization folder
+copy portal-ext.properties mentioned link in liferay in the location where liferay has been downloaded
+/home/user/liferay-ce-portal-7.4.4.18-ga/
+files 
+
+
+
+
+10. Increase the metaspace size
+
+Replace the below line in setenv.sh inside tomcat bin
+
+CATALINA_OPTS="$CATALINA_OPTS -Dfile.encoding=UTF-8 -Djava.locale.providers=JRE,COMPAT,CLDR -Djava.net.preferIPv4Stack=true -Duser.timezone=GMT -Xss8m -Xms8g -Xmx20g -XX:MaxNewSize=5g -XX:MaxMetaspaceSize=5g -XX:MetaspaceSize=3g -XX:NewSize=3g -XX:SurvivorRatio=7"
+
+
+
+
+
+
+
+11. Add environment variable
+
+Create file : sudo gedit /etc/environment
+
+                 b. add below line and save and close
+
+                      _JAVA_OPTIONS=-Djdk.net.URLClassPath.disableClassPathURLCheck=true -Djdk.util.zip.disableZip64ExtraFieldValidation=true
+
+
+
+
+12. Maven build: To build sw360 project :
+
+               Navigate to the folder where sw360 project is cloned and run the below command.
+
+              sudo mvn clean install -P deploy  -Dbase.deploy.dir=. -Dliferay.deploy.dir=/home/user1/liferay-ce-portal-7.4.3.18-ga18/deploy -Dbackend.deploy.dir=/home/user1/liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/webapps -                    Drest.deploy.dir=/home/user1/liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/webapps -DskipTests
+
+
+
+
+              In place of user1 please specify the correct liferay path.
+
+
+
+
+13. For Lucene Advanced Search:
+
+a)    Download and rename src from github :
+wget https://github.com/rnewson/couchdb-lucene/archive/v2.1.0.tar.gz -O couchdb-lucene.tar.gz
+b)    Extract src
+tar -xzf couchdb-lucene.tar.gz
+c)    cd couchdb-lucene-2.1.0
+d)    sed -i "s/allowLeadingWildcard=false/allowLeadingWildcard=true/" ./src/main/resources/couchdb-lucene.ini
+e)    Edit and make changes to couchdb-lucene.ini for couchdb username and pwd (username and passward given while installing)
+vim ./src/main/resources/couchdb-lucene.ini
+http://username:pwd@localhost:5984/
+f)    Download patch
+wget https://raw.githubusercontent.com/sw360/sw360vagrant/master/shared/couchdb-lucene.patch
+g)    Apply patch
+patch -p1 < couchdb-lucene.patch
+h)    Build sources
+mvn clean install war:war
+i)    Copy and rename war file to webapps
+cp ./target/*.war /<liferay>/<tomcat>/webapps/couchdb-lucene.war
+
+
+
+
+13. Tomcat start / stop:
+
+cd liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/bin
+sudo ./shutdown.sh
+sudo ./startup.sh
+
+
+
+
+14. Tomcat start / stop in debug mode:
+
+cd liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/bin
+Start : sudo ./catalina.sh jpda start
+Stop : sudo ./catalina.sh jpda stop
+Open eclipse Setup remote debug configuration in eclipse
+Right click on project-->select Debug as → select debug configuration → Select Remote Java Application → Select New Cofiguration→ Click Source → Click Add →  Click Java Project →  Select all projects→ Apply→ Debug
+Run debug mode
+
+
+
+
+
+
+
+15. Launch the sw360 application by running in your localhost port.
+
+Start tomcat
+Access http://localhost:8080/ from browser
+
+
+
+
+16. Follow the below steps for sw360 setup in Liferay which is a one time setup:
+
+Steps are described in the below url , donot do any changes in basic configuration as described in link ,start from login in by using username and password .
+
+                      username : setup@sw360.org , password : sw360fossy.
+
+                      https://wiki.siemens-energy.com/display/Ex/Liferay_configuration
+
+                 b. Download the public and private lar files from below urls and follow the steps mentioned in wiki link:
+
+                c. https://github.com/eclipse-sw360/sw360/blob/main/frontend/configuration/Private_Pages_7_4_3_18_GA18.lar
+
+                d. https://github.com/eclipse-sw360/sw360/blob/main/frontend/configuration/Public_Pages_7_4_3_18_GA18.lar
+
+               e. Import users in admin menu 
+
+ 
+
+17. Install Eclipse / Intellij
+
+         We can select either of the IDE’s(Eclipse,Intellij)
+
+Install Eclipse from ubuntu app store.
+Install Intellij from ubuntu app store.
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                                               TroubleShooting
+
+18. Clean the tomcat server:
+
+                Clean the tomcat server incase sw360 application is not responding properly or changes are not reflecting.
+
+shutdown the tomcat.
+remove everything with sw360 extension from the liferay osgi->modules folder.
+remove everything from the tomcat webapps folder except ROOT and Couchdb-lucene.
+sudo rm -rf attachments.war attachments/ authorization/ authorization.war components.war components/ cvesearch.war cvesearch/ fossology.war fossology/ licenses.war licenses/ licenseinfo.war licenseinfo/ moderation.war moderation/ projects.war projects.war resource/ resource.war search.war search/ schedule.war schedule/ vulnerabilities.war vulnerabilities/ wsimport.war wsimport.war users.war users/ vendors.war vendors wsimport/ projects/ changelogs.war changelogs/ vmcomponents.war health.war vmcomponents/ health/
+
+
+
+
+
+
+
+19. To check the tomcat logs-
+
+cd liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/bin
+sudo tail -1000f ../logs/catalina.out
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                                            Useful Commands
+
+20. Generating ssh key:
+
+              ssh-keygen -t rsa -b 4096 -C "xxx@siemens-energy.com"
+
+              eval "$(ssh-agent -s)"
+
+             ssh-add ~/.ssh/id_rsa
+
+             cat ~/.ssh/id_rsa.pub
+
+
+
+
+21. Couch db status:
+
+Status : sudo systemctl status couchdb.service
+Start : sudo systemctl start couchdb.service
+Stop : sudo systemctl stop couchdb.service
+
+
+
+
+22. Python setup to run scripts in db:
+
+sudo apt install python3-pip
+pip3 install couchdb
+ex: python3 test.py
+
+ 
+
+23. To check if tomcat is running : ps -ef | grep tomcat
+
+
+
+
+24. Run this command if build is not running:
+
+sudo chown -R <user>:<user> *
+sudo chown -R <user>:<user> .flattened-pom.xml
+
+                  Replace with correct user
+
+ 
+
+
+
+
+                                                                                                                                                                   Deployment Command 
+
+
+
+
+25. sudo mvn clean package -P deploy  -Dbase.deploy.dir=. -Dliferay.deploy.dir=/home/user1/liferay-ce-portal-7.4.3.18-ga18/deploy -Dbackend.deploy.dir=/home/user1/liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/webapps -Drest.deploy.dir=/home/user1/liferay-ce-portal-7.4.3.18-ga18/tomcat-9.0.56/webapps  -Dhelp-docs=true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
