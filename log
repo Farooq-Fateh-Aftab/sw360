@@ -1,0 +1,49 @@
+newui-farooq@newui-farooq-VMware-Virtual-Platform:/opt$ cd keycloak-26.0.5/bin/
+newui-farooq@newui-farooq-VMware-Virtual-Platform:/opt/keycloak-26.0.5/bin$ ./kc.sh start --log="console,file" --hostname-strict-backchannel=false --http-enabled=true --http-port=8083 --https-port=8533 --hostname-strict=false --hostname-strict-https=false
+Changes detected in configuration. Updating the server image.
+Updating the configuration and installing your custom providers, if any. Please wait.
+ERROR: Failed to run 'build' command.
+ERROR: io.quarkus.builder.BuildException: Build failure: Build failed due to errors
+	[error]: Build step io.quarkus.deployment.pkg.steps.JarResultBuildStep#buildRunnerJar threw an exception: java.nio.file.ReadOnlyFileSystemException
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystem.checkWritable(ZipFileSystem.java:370)
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystem.createDirectory(ZipFileSystem.java:708)
+	at jdk.zipfs/jdk.nio.zipfs.ZipPath.createDirectory(ZipPath.java:742)
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystemProvider.createDirectory(ZipFileSystemProvider.java:186)
+	at java.base/java.nio.file.Files.createDirectory(Files.java:699)
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:807)
+	at java.base/java.nio.file.Files.createDirectories(Files.java:752)
+	at io.quarkus.deployment.pkg.steps.JarResultBuildStep.buildThinJar(JarResultBuildStep.java:664)
+	at io.quarkus.deployment.pkg.steps.JarResultBuildStep.buildRunnerJar(JarResultBuildStep.java:228)
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:733)
+	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:856)
+	at io.quarkus.builder.BuildContext.run(BuildContext.java:256)
+	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2516)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2495)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1521)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:483)
+
+ERROR: Build failure: Build failed due to errors
+	[error]: Build step io.quarkus.deployment.pkg.steps.JarResultBuildStep#buildRunnerJar threw an exception: java.nio.file.ReadOnlyFileSystemException
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystem.checkWritable(ZipFileSystem.java:370)
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystem.createDirectory(ZipFileSystem.java:708)
+	at jdk.zipfs/jdk.nio.zipfs.ZipPath.createDirectory(ZipPath.java:742)
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystemProvider.createDirectory(ZipFileSystemProvider.java:186)
+	at java.base/java.nio.file.Files.createDirectory(Files.java:699)
+	at java.base/java.nio.file.Files.createAndCheckIsDirectory(Files.java:807)
+	at java.base/java.nio.file.Files.createDirectories(Files.java:752)
+	at io.quarkus.deployment.pkg.steps.JarResultBuildStep.buildThinJar(JarResultBuildStep.java:664)
+	at io.quarkus.deployment.pkg.steps.JarResultBuildStep.buildRunnerJar(JarResultBuildStep.java:228)
+	at java.base/java.lang.invoke.MethodHandle.invokeWithArguments(MethodHandle.java:733)
+	at io.quarkus.deployment.ExtensionLoader$3.execute(ExtensionLoader.java:856)
+	at io.quarkus.builder.BuildContext.run(BuildContext.java:256)
+	at org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.doRunWith(EnhancedQueueExecutor.java:2516)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2495)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1521)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:483)
+
+For more details run the same command passing the '--verbose' option. Also you can use '--help' to see the details about the usage of the particular command.
+newui-farooq@newui-farooq-VMware-Virtual-Platform:/opt/keycloak-26.0.5/bin$ 
